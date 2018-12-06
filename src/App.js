@@ -10,19 +10,18 @@ class App extends Component {
     super(props);
     this.state = {
       todos: [],
-      input: ' '
+      input: ''
     }
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
-    this.completeTodo = this.completeTodo.bind(this);
-    this.onchange = this.onchange.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  onchange(event){
+  onChange(event){
     console.log(event.target.value);
     this.setState({
       input: event.target.value
-    })
+    });
   }
 
   addTodo(event) {
@@ -35,12 +34,17 @@ class App extends Component {
         var createRequest = new XMLHttpRequest();
           createRequest.onreadystatechange = function(){
             if (this.readyState === 4 && this.status === 200) {
+              var temp = [...self.state.todos, JSON.parse(this.responseText)]
+              temp.sort(function (a, b){
+
+                return a.text.localeCompare(b.text);
+              })
               self.setState({
-                todos: [...self.state.todos, JSON.parse(this.responseText)]
+                todos: temp
                 })
               self.setState({
                 input: ''
-              })
+              });
             } else if (this.readyState === 4) {
               console.log(this.responseText);
             }
@@ -68,10 +72,6 @@ class App extends Component {
 
 
 
-   completeTodo(event) {
-
-        // add completed class
-  }
 
    deleteTodo(id){
      console.log(id);
@@ -84,11 +84,11 @@ class App extends Component {
         delRequest.onreadystatechange = function(){
           if (this.readyState === 4 && this.status === 200) {
             //state.filter
-            const remainTodos = self.state.todos.filter((todo => {
+            const remainTodos = self.state.todos.filter((todo) => {
               if (todo.id !== id){
                 return todo;
               }
-            }))
+            });
             self.setState({ todos: remainTodos });
           } else if (this.readyState === 4) {
             console.log(this.responseText);
@@ -106,10 +106,10 @@ class App extends Component {
 
   render() {
     return (
-      <section id= "todos"> <NewTodo addTodo={this.addTodo} input={this.state.input} onchange={this.onChange}/>
+      <section id= "todos"> <NewTodo addTodo={this.addTodo} input={this.state.input} onChange={this.onChange}/>
       {this.state.todos.map((todo) =>
-        <Todo key={todo.id} completed={todo.completed}
-        text={todo.text} deleteTodo={this.deleteTodo} completeTodo={this.completeTodo}/>
+        <Todo key={todo.id} id={todo.id} completed={todo.completed}
+        text={todo.text} deleteTodo={this.deleteTodo}/>
       )}
       </section>
 

@@ -9,7 +9,7 @@ class Todo extends Component {
       completed: this.props.completed
     }
     this.chkTodo = this.chkTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
+    this.delTodo = this.delTodo.bind(this);
   }
 
   chkTodo(event){
@@ -40,7 +40,7 @@ class Todo extends Component {
 
   }
 
-  deleteTodo(event){
+  delTodo(event){
     console.log("remove");
     console.log(this.props.id);
     this.props.deleteTodo(this.props.id);
@@ -57,7 +57,7 @@ class Todo extends Component {
         <article id={this.props.id} className={classTodo}>
           <button className="check" onClick={this.chkTodo}></button>
           <p>{this.props.text}</p>
-          <button className="delete" onClick={this.deleteTodo}></button>
+          <button className="delete" onClick={this.delTodo}></button>
         </article>
     );
   }

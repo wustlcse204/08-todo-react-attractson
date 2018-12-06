@@ -5,7 +5,7 @@ class NewTodo extends Component {
   render() {
     return (
       <div id="newtodo">
-        <form id="newTodoForm">
+        <form id="newTodoForm" onSubmit={this.props.addTodo}>
           <input id="newtitle" type="text" placeholder="Type your works" value={this.props.input} onChange={this.props.onChange}/>
           <button id="newSubmit">+</button>
         </form>

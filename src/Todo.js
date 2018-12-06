@@ -40,6 +40,8 @@ class Todo extends Component {
 
   }
 
+  // devin said not having uncheck ability is fine //
+
   delTodo(event){
     console.log("remove");
     console.log(this.props.id);

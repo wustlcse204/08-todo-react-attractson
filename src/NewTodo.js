@@ -6,7 +6,7 @@ class NewTodo extends Component {
     return (
       <div id="newtodo">
         <form id="newTodoForm">
-          <input id="newtitle" type="text" placeholder="Type your works" value={this.props.input} onChange={this.props.onChange} />
+          <input id="newtitle" type="text" placeholder="Type your works" value={this.props.input} onChange={this.props.onChange}/>
           <button id="newSubmit">+</button>
         </form>
       </div>

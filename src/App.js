@@ -6,11 +6,11 @@ import NewTodo from './NewTodo';
 var apikey = "9080c03be58de416229857007d59e70f3f84e0e367dbf14a6b9be52924edfbf8"
 
 class App extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
       todos: [],
-      input: ''
+      input: ' '
     }
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
@@ -21,12 +21,11 @@ class App extends Component {
   onchange(event){
     console.log(event.target.value);
     this.setState({
-      input:event.target.value
-    });
+      input: event.target.value
+    })
   }
 
   addTodo(event) {
-    document.getElementById("newTodoForm").addEventListener("submit",function(event) {
       event.preventDefault();
         var self = this;
         var data = {
@@ -35,14 +34,14 @@ class App extends Component {
 
         var createRequest = new XMLHttpRequest();
           createRequest.onreadystatechange = function(){
-            if (this.readyState == 4 && this.status == 200) {
+            if (this.readyState === 4 && this.status === 200) {
               self.setState({
-                todos : [...self.state.todos, JSON.parse(this.responseText)]
-                });
+                todos: [...self.state.todos, JSON.parse(this.responseText)]
+                })
               self.setState({
-                input: ' '
+                input: ''
               })
-            } else if (this.readyState == 4) {
+            } else if (this.readyState === 4) {
               console.log(this.responseText);
             }
         };
@@ -51,8 +50,7 @@ class App extends Component {
         createRequest.setRequestHeader("x-api-key", apikey);
         createRequest.send(JSON.stringify(data));
 
-    }
-  )}
+  }
 
 
 
@@ -72,44 +70,31 @@ class App extends Component {
 
    completeTodo(event) {
 
-        console.log(event);
-        var todoId = event.target.parentNode.id;
-        var data = {
-          completed: true
-        };
-        var comRequest = new XMLHttpRequest();
-        comRequest.onreadystatechange = function(){
-          if (this.readyState == 4 && this.status == 200) {
-            event.target.parentNode.classList.add("completed");
-            //handlestate
-          } else if (this.readyState == 4) {
-            console.log(this.responseText)
-          }
-        }
-        comRequest.open("PUT", "https://api.kraigh.net/todos/" + todoId, true);
-        comRequest.setRequestHeader("Content-type", "application/json");
-        comRequest.setRequestHeader("x-api-key", apikey);
-        comRequest.send(JSON.stringify(data));
         // add completed class
   }
 
-   deleteTodo(event){
+   deleteTodo(id){
+     console.log(id);
         // Handle Todo completion
-        var todoId = event.target.parentNode.id;
-
+        var self = this;
         // event listener on button click
         // API Call,delete to remove
 
         var delRequest = new XMLHttpRequest();
         delRequest.onreadystatechange = function(){
-          if (this.readyState == 4 && this.status == 200) {
-            event.target.parentNode.remove();
+          if (this.readyState === 4 && this.status === 200) {
             //state.filter
-          } else if (this.readyState == 4) {
+            const remainTodos = self.state.todos.filter((todo => {
+              if (todo.id !== id){
+                return todo;
+              }
+            }))
+            self.setState({ todos: remainTodos });
+          } else if (this.readyState === 4) {
             console.log(this.responseText);
           }
         }
-        delRequest.open("DELETE", "https://api.kraigh.net/todos/" + todoId, true);
+        delRequest.open("DELETE", "https://api.kraigh.net/todos/" + id, true);
         delRequest.setRequestHeader("Content-type", "application/json");
         delRequest.setRequestHeader("x-api-key", apikey);
         delRequest.send();
@@ -121,11 +106,12 @@ class App extends Component {
 
   render() {
     return (
-      <section id= "todos"> <NewTodo addTodo ={this.addTodo} input ={this.state.input} onchange={this.onChange}/>
+      <section id= "todos"> <NewTodo addTodo={this.addTodo} input={this.state.input} onchange={this.onChange}/>
       {this.state.todos.map((todo) =>
         <Todo key={todo.id} completed={todo.completed}
         text={todo.text} deleteTodo={this.deleteTodo} completeTodo={this.completeTodo}/>
-      )}      </section>
+      )}
+      </section>
 
     );
   }
@@ -134,11 +120,11 @@ class App extends Component {
     var self = this;
     var listRequest = new XMLHttpRequest();
     listRequest.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState === 4 && this.status === 200) {
         var todos = JSON.parse(this.responseText);
         // display Todos on page
         self.setState({todos: todos});
-              } else if (this.readyState == 4){
+      } else if (this.readyState === 4){
         console.log(this.responseText);
       }
     }
